@@ -48,4 +48,33 @@
   - name: Start example Node.js app.
     command: forever start /node-app/app.js
     when: "forever_list.stdout.find('/node-app/app.js') == -1"
+  
+# third play 
+- name: Play - Nginx LB Installer
+  hosts: loadbalancer
+  become: yes
+  tasks:
+    - name: Update cache
+      apt: update_cache=yes
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: latest
+      become: yes
+    - name: Copy Nginx configuration file
+      copy:
+        src: ./nginx.cfg
+        dest: /etc/nginx/sites-available/nginx.cfg
+      become: yes
+    - name: Create Symlink of the configuation file
+        file:
+          src: /etc/nginx/sites-available/nginx.cfg
+          dest: /etc/nginx/sites-enabled/default
+          state: link
+        become: yes
+    - name: Restart Nginx so changes apply
+      service:
+        name: nginx
+        state: restarted
+      become: yes
 
