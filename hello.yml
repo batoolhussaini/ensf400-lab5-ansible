@@ -50,7 +50,7 @@
     when: "forever_list.stdout.find('/node-app/app.js') == -1"
   
 # third play 
-- name: Play - Nginx LB Installer
+- name: Install and configure Nginx as a LoadBalancer
   hosts: loadbalancer
   become: yes
   tasks:
